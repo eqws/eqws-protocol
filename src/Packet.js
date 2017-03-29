@@ -11,11 +11,12 @@ class Packet {
 		this.data = data;
 	}
 
-	encode(binarySupport = true) {
-		const parser = binarySupport ? Parsers.binary : Parsers.string;
-		const data = [this.type, this.data];
+	toJSON() {
+		return [this.type, this.data];
+	}
 
-		return parser.encode(data);
+	encode(binarySupport = true) {
+		return Packet.encode(this.toJSON(), binarySupport);
 	}
 
 	isValid() {
@@ -31,6 +32,15 @@ class Packet {
 		}
 
 		return false;
+	}
+
+	static encode(data, binarySupport = true) {
+		if (!Array.isArray(data) || data.length !== 2) {
+			throw new Error('Invalid packet format');
+		}
+
+		const parser = binarySupport ? Parsers.binary : Parsers.string;
+		return parser.encode(data);
 	}
 
 	static parse(rawData) {
