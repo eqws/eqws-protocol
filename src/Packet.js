@@ -29,6 +29,14 @@ class Packet {
 				if (~C.IMPORTANT_EVENTS.indexOf(this.data[0])) return false;
 
 				return true;
+
+			case C.PACKET_TYPES.RPC:
+				if (!Array.isArray(this.data)
+					|| this.data.length !== 3
+					|| typeof this.data[0] !== 'string'
+					|| typeof this.data[1] !== 'string') return false;
+
+				return true;
 		}
 
 		return false;
